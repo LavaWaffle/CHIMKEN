@@ -62,22 +62,27 @@ public class ArcadeDrive extends CommandBase {
     }
 
     private void arcadeDrive(double velocity, double turning) {
-        // Convert turning and speed to left right encoder velocity
-        // double leftMotorOutput = velocity + turning;
-        // double rightMotorOutput = velocity - turning;
-        double leftMotorOutput = velocity;
-        double rightMotorOutput = velocity;
+        // Convert turning and speed to left and right
+        double left;
+        double right;
 
+        double maxInput = Math.copySign(Math.max(Math.abs(velocity), Math.abs(turning)), velocity);
         if (velocity >= 0) {
+            // robot wants to move forward
+            // we are in quadrant 1 or 2
             if (turning >= 0) {
-                double maxRight = 0.5 * turning;
-                if (rightMotorOutput > maxRight) rightMotorOutput = maxRight;
+                // robot wants to move forward and or turn
+                // we are in quadrant 1
+                left = maxInput;
+                right = velocity - turning;
             }
         }
+
+        
         
 
         // Send to motors
-        m_drivetrain.percentDrive(leftMotorOutput * 0.1, rightMotorOutput * 0.1);
+        m_drivetrain.percentDrive(left * 0.1, right * 0.1);
     }
 
     // Called once the command ends or is interrupted.
